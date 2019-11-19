@@ -1,0 +1,25 @@
+{
+  "name": "branch-out-github-repo",
+  "version": "1.0.0",
+  "description": "A util to create `RELEASE` branch on remote github repo.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fanyangxi/branch-out-github-repo.git"
+  },
+  "keywords": [
+    "branch-out"
+  ],
+  "author": "Yangxi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fanyangxi/branch-out-github-repo/issues"
+  },
+  "homepage": "https://github.com/fanyangxi/branch-out-github-repo#readme",
+  "dependencies": {
+    "octonode": "^0.9.5"
+  }
+}
