@@ -1,4 +1,4 @@
-var github = require('octonode');
+var Github = require('octonode');
 var Confirm = require('prompt-confirm');
 var NotFoundError = require('./not-found-error.js');
 
@@ -9,12 +9,14 @@ const DEFAULT_DESTINATION_BRANCH = "release";
 source: could be the source-revision-number, or the branch-name
 destinationBranch: the destination branch-name to be created
 */
-async function branchOut(targetRepo, source, destinationBranch) {
+async function branchOut(githubToken, targetRepo, source, destinationBranch) {
     console.log(`${targetRepo} ${source} ${destinationBranch}`);
-    const client = getGithubClient();
-    const ghRepo = client.repo('fanyangxi/StringReplaceTask');
+    const client = Github.client(githubToken);
+    const ghRepo = client.repo(targetRepo);
 
     try {
+        await _validateRepo(ghRepo);
+
         let baseRevisionSha = "";
         if(_isValidGithubRevisionSha(source)) {
             console.log(`Source received as revision-sha: ${source}`);
@@ -30,12 +32,9 @@ async function branchOut(targetRepo, source, destinationBranch) {
         }
 
         // check if destination-branch exist
-            //if yes: confirm if delete existing destination
-            //if no: continue
-        await _deleteTag(ghRepo, "release")
-        await _deleteTag(ghRepo, "master")
         const isDestinationExist = await _isBranchExist(ghRepo, destinationBranch);
         if (isDestinationExist) {
+            //if yes: confirm if delete existing destination
             const result = await new Confirm(`Warning: Target branch (${destinationBranch}) already exist, do you want to delete and re-create it?`).run();
             if (!!result == true) {
                 _deleteBranch(ghRepo, destinationBranch);
@@ -58,8 +57,16 @@ function _isValidGithubRevisionSha(input) {
     return new RegExp("^\\b[0-9a-f]{40}\\b$", "g").test(input)
 }
 
-function getGithubClient() {
-    return github.client("78f2cb1e4195e3d7d03677803d9240b53af6110e");
+async function _validateRepo(ghRepo) {
+    try {
+        return await ghRepo.infoAsync();
+    } catch(err) {
+        if (err.statusCode == 404) {
+            throw new NotFoundError(`Cannot find repo, value should be in format (:owner/:repo) EG.: nodejs/node-gyp`);
+        }
+
+        throw new Error(`Failed to retrieve repo info. Detail: ${err.statusCode} - ${err.message}`);
+    }
 }
 
 async function getTree(ghRepo, revisionSha) {
@@ -80,8 +87,8 @@ async function getBranch(ghRepo, branchName) {
     try {
         return await ghRepo.branchAsync(branchName);
     } catch(err) {
-        throw new NotFoundError(`Invalid branch-name: ${branchName}`);
         if (err.statusCode == 404) {
+            throw new NotFoundError(`Invalid branch-name: ${branchName}`);
         }
 
         throw new Error(`Failed to retrieve info with branch-name: ${branchName}. Detail: ${err.statusCode} - ${err.message}`, );
