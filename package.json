@@ -6,6 +6,9 @@
   "scripts": {
     "test": "test"
   },
+  "bin": {
+    "branch-out": "./bin/branch-out"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fanyangxi/branch-out-github-repo.git"
@@ -20,6 +23,10 @@
   },
   "homepage": "https://github.com/fanyangxi/branch-out-github-repo#readme",
   "dependencies": {
+    "commander": "^4.0.1",
     "octonode": "^0.9.5"
+  },
+  "engines": {
+    "node": ">= 6.0.0"
   }
 }

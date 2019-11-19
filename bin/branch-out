@@ -1,0 +1,54 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const path = require('path')
+const program = require('commander');
+const { createNewBranch } = require(path.join(__dirname, '../src/create-new-branch'))
+
+// Local(s):
+const commandName = "branch-out";
+
+// Common setup for program:
+program
+  .option('-d, --debug', 'output extra debugging')
+  .option("-v, --verbose", "Indicates more logging")
+
+// Command 1:
+program
+    .command('release <target-repo>')
+    .description('Create a release branch')
+    .action(function (targetRepo, options) {
+        console.log(createNewBranch);
+        console.log(`${targetRepo} ${options.verbose}`);
+        createNewBranch();
+    })
+    .helpOption('-h, --HELP', function() {
+        console.log('');
+        console.log('Examples:');
+        console.log('');
+        console.log(`  $ ${commandName} release TARGET-REPO-NAME`);
+    });
+
+// Command 2:
+program
+    .command('tag <target-repo>')
+    .description('Create a release branch')
+    .option("-n, --tag-number <tag-number>", "The tag number to be used")
+    .action(function (options) {
+        console.log(options.exec_mode);
+    })
+    .helpOption('-h, --HELP', function() {
+        console.log('');
+        console.log('Examples:');
+        console.log('');
+        console.log(`  $ ${commandName} release -r TARGET-REPO-NAME`);
+    });
+
+program
+    .command('*')
+    .action(function (env) {
+        console.log('Unrecognaized command');
+    });
+
+program.parse(process.argv);
