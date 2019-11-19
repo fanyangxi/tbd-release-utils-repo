@@ -4,7 +4,7 @@
 
 const path = require('path')
 const program = require('commander');
-const { createNewBranch } = require(path.join(__dirname, '../src/create-new-branch'))
+const { branchOut } = require(path.join(__dirname, '../src/create-new-branch'))
 
 // Local(s):
 const commandName = "branch-out";
@@ -14,14 +14,14 @@ program
   .option('-d, --debug', 'output extra debugging')
   .option("-v, --verbose", "Indicates more logging")
 
-// Command 1:
+// Command 1: af5c1f1815b65a34a21993adec7064f9ac2d9a9e
 program
     .command('release <target-repo>')
     .description('Create a release branch')
+    .option("-s, --source-revision-sha <source-revision-sha/branch-name>", "source-revision-sha or the branch you want to branch out from", "master")
+    .option("-d, --destination-repo <destination-repo>", "destination-repo", "release")
     .action(function (targetRepo, options) {
-        console.log(createNewBranch);
-        console.log(`${targetRepo} ${options.verbose}`);
-        createNewBranch();
+        branchOut(targetRepo, options.sourceRevisionSha, options.destinationRepo);
     })
     .helpOption('-h, --HELP', function() {
         console.log('');

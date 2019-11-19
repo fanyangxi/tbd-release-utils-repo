@@ -24,7 +24,8 @@
   "homepage": "https://github.com/fanyangxi/branch-out-github-repo#readme",
   "dependencies": {
     "commander": "^4.0.1",
-    "octonode": "^0.9.5"
+    "octonode": "^0.9.5",
+    "prompt-confirm": "^2.0.4"
   },
   "engines": {
     "node": ">= 6.0.0"
