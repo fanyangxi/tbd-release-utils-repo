@@ -14,7 +14,13 @@
     "url": "git+https://github.com/fanyangxi/tbd-release-utils-repo.git"
   },
   "keywords": [
-    "branch-out", "tag", "github", "bitbucket", "release", "branching", "release-management"
+    "branch-out",
+    "tag",
+    "github",
+    "bitbucket",
+    "release",
+    "branching",
+    "release-management"
   ],
   "author": "Yangxi",
   "license": "MIT",
