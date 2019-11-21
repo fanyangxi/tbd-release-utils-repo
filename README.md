@@ -1,11 +1,10 @@
-# branch-out-github-repo
+# tbd-release-utils:
 A util to create `RELEASE` branch on remote github repo.
 
 
 # Usage:
-
-> branch-out branch-out --repo "backend-user-api" --branch-name "release"
-> branch-out tag --repo "backend-user-api" --branch-name "release"
+> tbd-release-utils branch-out --repo "backend-user-api" --branch-name "release"
+> tbd-release-utils tag --repo "backend-user-api" --branch-name "release"
 
 
 # Refers:

@@ -1,5 +1,5 @@
 {
-  "name": "branch-out-github-repo",
+  "name": "tbd-release-utils-repo",
   "version": "1.0.0",
   "description": "A util to create `RELEASE` branch on remote github repo.",
   "main": "index.js",
@@ -7,21 +7,21 @@
     "test": "test"
   },
   "bin": {
-    "branch-out": "./bin/branch-out"
+    "branch-out": "./bin/tbd-release-utils"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fanyangxi/branch-out-github-repo.git"
+    "url": "git+https://github.com/fanyangxi/tbd-release-utils-repo.git"
   },
   "keywords": [
-    "branch-out"
+    "branch-out", "tag", "github", "bitbucket", "release", "branching"
   ],
   "author": "Yangxi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fanyangxi/branch-out-github-repo/issues"
+    "url": "https://github.com/fanyangxi/tbd-release-utils-repo/issues"
   },
-  "homepage": "https://github.com/fanyangxi/branch-out-github-repo#readme",
+  "homepage": "https://github.com/fanyangxi/tbd-release-utils-repo#readme",
   "dependencies": {
     "commander": "^4.0.1",
     "octonode": "^0.9.5",
