@@ -3,8 +3,8 @@ A utils for `trunk-based development` release-management.  Includes `branch-out`
 
 
 # Usage:
-> tbd-release-utils branch-out -t <github-token> -s master -d release <target-repo>  
-> tbd-release-utils tag -t <github-token> -s release -n <tag-name> <target-repo>
+> tbd-release-utils branch-out -t `github-token` -s master -d release `target-repo`  
+> tbd-release-utils tag -t `github-token` -s release -n `tag-name` `target-repo`
 
 
 # Refers:
