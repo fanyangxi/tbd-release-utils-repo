@@ -1,7 +1,7 @@
 {
   "name": "tbd-release-utils-repo",
   "version": "1.0.0",
-  "description": "A util to create `RELEASE` branch on remote github repo.",
+  "description": "A util for trunk-based development release-management. Includes `branch-out` and `tag` remote repo",
   "main": "index.js",
   "scripts": {
     "test": "test"
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/fanyangxi/tbd-release-utils-repo.git"
   },
   "keywords": [
-    "branch-out", "tag", "github", "bitbucket", "release", "branching"
+    "branch-out", "tag", "github", "bitbucket", "release", "branching", "release-management"
   ],
   "author": "Yangxi",
   "license": "MIT",

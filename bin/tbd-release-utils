@@ -4,14 +4,15 @@
 
 const path = require('path')
 const program = require('commander');
-const { branchOut } = require(path.join(__dirname, '../src/create-new-branch'))
+const { branchOutRemote } = require(path.join(__dirname, '../src/branch-out-remote'))
+const { tagRemote } = require(path.join(__dirname, '../src/tag-remote'))
 
 // Local(s):
 const commandName = "tbd-release-utils";
 
 // Common setup for program:
 program
-  .option('-d, --debug', 'output extra debugging');
+  .option('-v, --verbose', 'output extra debugging');
 
 // Command 1: af5c1f1815b65a34a21993adec7064f9ac2d9a9e
 program
@@ -19,18 +20,20 @@ program
     .description('Create a release branch on remote repo. TARGET-REPO should be in format (:owner/:repo) EG.: nodejs/node-gyp')
     .requiredOption("-t, --github-token <github-token>", "Your github token")
     .requiredOption("-s, --source-revision-sha <source-revision-sha/branch-name>", "source-revision-sha or the branch you want to branch out from", "master")
-    .requiredOption("-d, --destination-repo <destination-repo>", "destination-repo", "release")
+    .requiredOption("-d, --destination-repo <destination-repo>", "the destination-repo", "release")
     .action(function (targetRepo, options) {
-        branchOut(options.githubToken, targetRepo, options.sourceRevisionSha, options.destinationRepo);
+        branchOutRemote(options.githubToken, targetRepo, options.sourceRevisionSha, options.destinationRepo);
     });
 
 // Command 2:
 program
     .command('tag <target-repo>')
-    .description('Create a tag on remote repo')
-    .option("-n, --tag-number <tag-number>", "The tag number to be used")
-    .action(function (options) {
-        console.log(options.exec_mode);
+    .description('Create a tag on remote repo.')
+    .requiredOption("-t, --github-token <github-token>", "Your github token")
+    .requiredOption("-s, --source-revision-sha <source-revision-sha/branch-name>", "source-revision-sha or the branch you want to branch out from", "master")
+    .requiredOption("-n, --tag-name <tag-name>", "The tag number to be used")
+    .action(function (targetRepo, options) {
+        tagRemote(options.githubToken, targetRepo, options.sourceRevisionSha, options.tagName);
     });
 
 program

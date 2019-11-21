@@ -1,16 +1,17 @@
 var Github = require('octonode');
 var Confirm = require('prompt-confirm');
 var NotFoundError = require('./not-found-error.js');
+var { getBranch } = require('./shared.js');
 
 const DEFAULT_SOURCE_BRANCH = "master";
 const DEFAULT_DESTINATION_BRANCH = "release";
 
 /*
 source: could be the source-revision-number, or the branch-name
-destinationBranch: the destination branch-name to be created
+tagName: the result tag name
 */
-async function branchOut(githubToken, targetRepo, source, destinationBranch) {
-    console.log(`${targetRepo} ${source} ${destinationBranch}`);
+async function tagRemote(githubToken, targetRepo, source, tagName) {
+    console.log(`${targetRepo} ${source} ${tagName}`);
     const client = Github.client(githubToken);
     const ghRepo = client.repo(targetRepo);
 
@@ -32,12 +33,12 @@ async function branchOut(githubToken, targetRepo, source, destinationBranch) {
         }
 
         // check if destination-branch exist
-        const isDestinationExist = await _isBranchExist(ghRepo, destinationBranch);
+        const isDestinationExist = await _isTagExist(ghRepo, tagName);
         if (isDestinationExist) {
             //if yes: confirm if delete existing destination
-            const result = await new Confirm(`Warning: Target branch (${destinationBranch}) already exist, do you want to delete and re-create it?`).run();
+            const result = await new Confirm(`Warning: Target tag (${tagName}) already exist, do you want to delete and re-create it?`).run();
             if (!!result == true) {
-                _deleteBranch(ghRepo, destinationBranch);
+                _deleteTag(ghRepo, tagName);
             } else {
                 console.log("Stop and exit");
                 process.exit();
@@ -45,9 +46,9 @@ async function branchOut(githubToken, targetRepo, source, destinationBranch) {
         }
 
         // Proceed with actual branch-out:
-        console.log(`Creating branch ${destinationBranch} from ${baseRevisionSha}`);
-        await _createNewBranch(ghRepo, baseRevisionSha, destinationBranch);
-        console.log("Branch-out finished");
+        console.log(`Creating tag ${tagName} from ${baseRevisionSha}`);
+        await _createTag(ghRepo, baseRevisionSha, tagName);
+        console.log("Tag-remote finished");
     } catch(err) {
         console.log(`Error: ${err.message}`);
     }
@@ -83,21 +84,9 @@ function getCommit(ghRepo) {
     });
 }
 
-async function getBranch(ghRepo, branchName) {
+async function _isTagExist(ghRepo, tagName) {
     try {
-        return await ghRepo.branchAsync(branchName);
-    } catch(err) {
-        if (err.statusCode == 404) {
-            throw new NotFoundError(`Invalid branch-name: ${branchName}`);
-        }
-
-        throw new Error(`Failed to retrieve info with branch-name: ${branchName}. Detail: ${err.statusCode} - ${err.message}`, );
-    }
-}
-
-async function _isBranchExist(ghRepo, branchName) {
-    try {
-        const result = await getBranch(ghRepo, branchName);
+        const result = await getRef(ghRepo, `tags/${tagName}`);
         return !!result;
     } catch(err) {
         if (err instanceof NotFoundError) {
@@ -108,38 +97,34 @@ async function _isBranchExist(ghRepo, branchName) {
     }
 }
 
-async function _createNewBranch(ghRepo, revisionSha, newBranchName) {
+async function getRef(ghRepo, refName) {
     try {
-        return await ghRepo.createRefAsync(`refs/heads/${newBranchName}`, revisionSha);
+        return await ghRepo.refAsync(refName);
     } catch(err) {
-        throw new Error(`Failed to create branch with name: ${newBranchName}. Detail: ${err.statusCode} - ${err.message}`);
+        if (err.statusCode == 404) {
+            throw new NotFoundError(`Invalid reference-name: ${refName}`);
+        }
+
+        throw new Error(`Failed to retrieve info with reference-name: ${refName}. Detail: ${err.statusCode} - ${err.message}`, );
     }
 }
 
-async function _deleteBranch(ghRepo, branchName) {
+async function _createTag(ghRepo, revisionSha, tagName) {
     try {
-        return await ghRepo.deleteRefAsync(`heads/${branchName}`);
+        return await ghRepo.createRefAsync(`refs/tags/${tagName}`, revisionSha);
     } catch(err) {
-        throw new Error(`Failed to delete branch: ${branchName}. Detail: ${err.statusCode} - ${err.message}`);
+        throw new Error(`Failed to create tag with name: ${tagName}. Detail: ${err.statusCode} - ${err.message}`);
     }
 }
 
-function _createTag(ghRepo, revisionSha, tagName) {
-    ghRepo.createRef(`refs/tags/${tagName}`, revisionSha, function(err, data, headers) {
-        console.log("error: " + err);
-        console.log("data: " + JSON.stringify(data));
-        console.log("headers:" + headers);
-    });
-}
-
-function _deleteTag(ghRepo, tagName) {
-    ghRepo.deleteRef(`tags/${tagName}`, function(err, data, headers) {
-        console.log("error: " + err);
-        console.log("data: " + JSON.stringify(data));
-        console.log("headers:" + headers);
-    });
+async function _deleteTag(ghRepo, tagName) {
+    try {
+        return await ghRepo.deleteRefAsync(`tags/${tagName}`);
+    } catch(err) {
+        throw new Error(`Failed to delete tag: ${tagName}. Detail: ${err.statusCode} - ${err.message}`);
+    }
 }
 
 module.exports = {
- branchOut: branchOut
+    tagRemote: tagRemote
 };

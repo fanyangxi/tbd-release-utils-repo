@@ -1,10 +1,10 @@
 # tbd-release-utils:
-A util to create `RELEASE` branch on remote github repo.
+A utils for `trunk-based development` release-management.  Includes `branch-out` (create a release on remote repo) and `tag` (tag a target revision on remote repo).
 
 
 # Usage:
-> tbd-release-utils branch-out --repo "backend-user-api" --branch-name "release"
-> tbd-release-utils tag --repo "backend-user-api" --branch-name "release"
+> tbd-release-utils branch-out -t <github-token> -s master -d release <target-repo>  
+> tbd-release-utils tag -t <github-token> -s release -n <tag-name> <target-repo>
 
 
 # Refers:
@@ -17,5 +17,3 @@ github api v3 in nodejs (Choose to use this package)
 Command line node project sample:
 > https://www.npmjs.com/package/commander
 > https://github.com/motdotla/node-lambda
-
-+
