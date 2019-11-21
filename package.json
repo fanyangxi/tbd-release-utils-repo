@@ -1,6 +1,6 @@
 {
-  "name": "tbd-release-utils-repo",
-  "version": "1.0.1",
+  "name": "tbd-release-utils",
+  "version": "1.0.2",
   "description": "A util for trunk-based development release-management. Includes `branch-out` and `tag` remote repo",
   "main": "index.js",
   "scripts": {
