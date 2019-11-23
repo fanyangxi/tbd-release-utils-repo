@@ -4,7 +4,8 @@
   "description": "A utils for trunk-based development release-management. Includes `branch-out` and `tag` remote repo",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "npx babel src/ --delete-dir-on-start --out-dir lib"
   },
   "bin": {
     "tbd-release-utils": "./bin/tbd-release-utils"
@@ -29,9 +30,15 @@
   },
   "homepage": "https://github.com/fanyangxi/tbd-release-utils-repo#readme",
   "dependencies": {
+    "@babel/polyfill": "^7.7.0",
     "commander": "^4.0.1",
     "octonode": "^0.9.5",
     "prompt-confirm": "^2.0.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.4",
+    "@babel/core": "^7.7.4",
+    "@babel/preset-env": "^7.7.4"
   },
   "engines": {
     "node": ">= 6.0.0"

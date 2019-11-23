@@ -2,6 +2,7 @@ var Github = require('octonode');
 var Confirm = require('prompt-confirm');
 var NotFoundError = require('./not-found-error.js');
 var { getBranch } = require('./shared.js');
+import stuff from './repo-hosts/client-base';
 
 const DEFAULT_SOURCE_BRANCH = "master";
 const DEFAULT_DESTINATION_BRANCH = "release";
