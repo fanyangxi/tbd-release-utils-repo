@@ -1,15 +1,15 @@
 
 class BaseClient {
-    constructor(repo) {
-    }
+  constructor(repo) {
+  }
 
-    getBranch(name) {
-        console.log(name);
-    }
+  getBranch(name) {
+    console.log(name);
+  }
 }
 
 export function stuff() {
-    console.log("name");
+  console.log('name');
 }
 
 export default BaseClient;
