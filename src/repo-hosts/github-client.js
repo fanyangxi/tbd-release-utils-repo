@@ -15,11 +15,6 @@ export default class GithubClient extends BaseClient {
     return new RegExp('^\\b[0-9a-f]{40}\\b$', 'g').test(input);
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  doSomething() {
-    console.log('>>> aaaaaaaaaxsafasdfsa');
-  }
-
   async getRepoInfo() {
     try {
       return await this.ghRepo.infoAsync();
