@@ -1,3 +1,5 @@
+import GithubClient from './repo-hosts/github-client';
+
 const program = require('commander');
 const { branchOutRemote } = require('./branch-out-remote');
 const { tagRemote } = require('./tag-remote');
@@ -19,7 +21,8 @@ program
   .requiredOption('-s, --source-revision-sha <source-revision-sha/branch-name>', 'source-revision-sha or the branch you want to branch out from', DEFAULT_SOURCE_BRANCH)
   .requiredOption('-d, --destination-repo <destination-repo>', 'the destination-repo', DEFAULT_DESTINATION_BRANCH)
   .action((targetRepo, options) => {
-    branchOutRemote(options.githubToken, targetRepo, options.sourceRevisionSha, options.destinationRepo);
+    const vcsClient = new GithubClient(options.githubToken, targetRepo);
+    branchOutRemote(vcsClient, options.sourceRevisionSha, options.destinationRepo);
   });
 
 // Command 2:
@@ -30,7 +33,9 @@ program
   .requiredOption('-s, --source-revision-sha <source-revision-sha/branch-name>', 'source-revision-sha or the branch you want to branch out from', 'master')
   .requiredOption('-n, --tag-name <tag-name>', 'The tag number to be used')
   .action((targetRepo, options) => {
-    tagRemote(options.githubToken, targetRepo, options.sourceRevisionSha, options.tagName);
+    process.env.mode = 'the-github';
+    const vcsClient = new GithubClient(options.githubToken, targetRepo);
+    tagRemote(vcsClient, options.sourceRevisionSha, options.tagName);
   });
 
 program

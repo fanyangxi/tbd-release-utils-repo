@@ -1,61 +1,53 @@
-import GithubClient from "./repo-hosts/github-client";
+const Confirm = require('prompt-confirm');
 
-const Github = require("octonode");
-const Confirm = require("prompt-confirm");
-const NotFoundError = require("./not-found-error.js");
-
-async function branchOutRemote(githubToken, targetRepo, source, destinationBranch) {
-  console.log(`${targetRepo} ${source} ${destinationBranch}`);
-  const client = Github.client(githubToken);
-  const ghRepo = client.repo(targetRepo);
+async function branchOutRemote(vcsClient, source, destinationBranch) {
+  console.log(`Params: ${source} ${destinationBranch}`);
 
   try {
     // Validate the repo:
-    await GithubClient.getRepoInfo(ghRepo);
+    await vcsClient.getRepoInfo();
 
-    let baseRevisionSha = "";
-    if (GithubClient.isValidGithubRevisionSha(source)) {
-      console.log(`Source received as revision-sha: ${source}`);
-      const result = await GithubClient.getTree(ghRepo, source);
+    let baseRevisionSha = '';
+    if (vcsClient.isValidRevisionSha(source)) {
+      console.log(`Source at revision-sha: ${source}`);
+      const result = await vcsClient.getTree(source);
       console.log(`Revision-info: ${result[0]}`);
       baseRevisionSha = source;
     } else {
-      console.log(`Source received as branch-name: ${source}`);
+      console.log(`Source at branch-name: ${source}`);
       // Try to get the head-commit-revision-number of branch
-      const result = await GithubClient.getBranch(ghRepo, source);
+      const result = await vcsClient.getBranch(source);
       console.log(`Branch-latest-commit-info: ${result[0].commit.sha}`);
       baseRevisionSha = result[0].commit.sha;
     }
 
     // check if destination-branch exist
-    const theBranch = await GithubClient.getBranch(ghRepo, branchName);
+    const theBranch = await vcsClient.getBranch(destinationBranch);
     const isDestinationExist = !!theBranch;
     if (isDestinationExist) {
       // if yes: confirm if delete existing destination
       const result = await new Confirm(
-        `Warning: Target branch (${destinationBranch}) already exist, do you want to delete and re-create it?`
+        `Warning: Target branch (${destinationBranch}) already exist, do you want to delete and re-create it?`,
       ).run();
-      if (!!result == true) {
-        GithubClient.deleteBranch(ghRepo, destinationBranch);
+      console.log(result);
+      if (!!result === true) {
+        console.log(`Delete existing branch ${destinationBranch}`);
+        vcsClient.deleteBranch(destinationBranch);
       } else {
-        console.log("Stop and exit");
+        console.log('Stop and exit');
         process.exit();
       }
     }
 
     // Proceed with actual branch-out:
     console.log(`Creating branch ${destinationBranch} from ${baseRevisionSha}`);
-    await GithubClient.createNewBranch(
-      ghRepo,
-      baseRevisionSha,
-      destinationBranch
-    );
-    console.log("Branch-out-remote finished");
+    await vcsClient.createNewBranch(baseRevisionSha, destinationBranch);
+    console.log('Branch-out-remote finished');
   } catch (err) {
     console.log(`Error: ${err.message}`);
   }
 }
 
 module.exports = {
-  branchOutRemote
+  branchOutRemote,
 };

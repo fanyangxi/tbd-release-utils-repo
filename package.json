@@ -31,6 +31,7 @@
   "homepage": "https://github.com/fanyangxi/tbd-release-utils-repo#readme",
   "dependencies": {
     "@babel/polyfill": "^7.7.0",
+    "@babel/runtime": "^7.7.4",
     "commander": "^4.0.1",
     "octonode": "^0.9.5",
     "prompt-confirm": "^2.0.4"
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@babel/cli": "^7.7.4",
     "@babel/core": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.7.4",
     "@babel/preset-env": "^7.7.4",
     "eslint": "^6.7.0",
     "eslint-config-airbnb-base": "^14.0.0",
